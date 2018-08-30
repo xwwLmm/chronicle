@@ -4,7 +4,7 @@ export default {
   state: {
     current: {
       name: 'Sun Reaver',
-      avatar: 'https://blog-1252181333.cossh.myqcloud.com/blog/avatar.png'
+      avatar: 'https://blog-1252181333.cossh.myqcloud.com/blog/avatar.png',
     },
   },
 
