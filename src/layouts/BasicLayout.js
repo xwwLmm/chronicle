@@ -4,7 +4,6 @@ import { connect } from 'dva';
 import InnerHeader from '../components/Header';
 import InnerFooter from '../components/Footer';
 import SiderMenu from '../components/SiderMenu';
-import styles from './BasicLayout.less';
 import logo from '@/assets/logo.png';
 
 const { Content, Header, Footer } = Layout;
