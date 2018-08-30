@@ -12,13 +12,7 @@ const { SubMenu } = Menu
 const getIcon = icon => {
   if (typeof icon === 'string') {
     if (icon.indexOf('http') === 0) {
-      return (
-        <img
-          src={icon}
-          alt="icon"
-          className={`${styles.icon} sider-menu-item-img`}
-        />
-      )
+      return <img src={icon} alt="icon" className={`${styles.icon} sider-menu-item-img`} />
     }
     return <Icon type={icon} />
   }
@@ -41,7 +35,7 @@ export default class SiderMenu extends PureComponent {
     const { collapsed, onCollapse, logo } = this.props
     const theme = 'light'
     const siderClass = classNames(styles.sider, {
-      [styles.light]: theme === 'light'
+      [styles.light]: theme === 'light',
     })
     const menuProps = {}
 
@@ -62,7 +56,7 @@ export default class SiderMenu extends PureComponent {
           </Link>
           {this.renderMenu({
             theme,
-            menuProps
+            menuProps,
           })}
         </div>
       </Sider>

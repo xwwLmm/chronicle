@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
-import BasicLayout from '@/layouts/BasicLayout';
+import React, { Component } from 'react'
+import BasicLayout from '@/layouts/BasicLayout'
 
 class App extends Component {
   render() {
-    return (
-      <BasicLayout />
-    );
+    return <BasicLayout />
   }
 }
 
-export default App;
+export default App
