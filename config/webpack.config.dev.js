@@ -90,8 +90,10 @@ module.exports = {
                         include: paths.appSrc,
                         loader: require.resolve("babel-loader"),
                         options: {
-                            // support antd
                             plugins: [
+                                "transform-decorators-legacy",
+                                "transform-runtime",
+                                // support antd
                                 [
                                     "import",
                                     [{ libraryName: "antd", style: "css" }]
