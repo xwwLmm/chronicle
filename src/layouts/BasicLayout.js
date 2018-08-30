@@ -2,6 +2,8 @@ import React from 'react';
 import { Layout } from 'antd';
 import InnerHeader from '../components/Header';
 import InnerFooter from '../components/Footer';
+import SiderMenu from '../components/SiderMenu';
+import styles from './BasicLayout.less';
 
 const { Content, Header, Footer } = Layout;
 
@@ -9,7 +11,7 @@ export default class BasicLayout extends React.PureComponent {
     
     render() {
         return (
-            <div>
+            <div className={styles.layout}>
                 <Layout>
                     <Header style={{ padding: 0 }}>
                         <InnerHeader />

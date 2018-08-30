@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import styles from './index.scss';
+import React, { Component } from 'react';
+import styles from './index.less';
 
 export default class Footer extends Component {
 
