@@ -6,7 +6,7 @@ export default class Footer extends Component {
     render() {
         return (
             <div className={styles.footer}>
-                编年史·Sun-Reaver 制作
+                编年史中台·Sun-Reaver
             </div>
         )
     }
