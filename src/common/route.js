@@ -42,7 +42,7 @@ const dynamicWrapper = (app, models, component) => {
       })
     },
     loading: () => {
-      return <Spin size="large" />
+      return <Spin size="large" className="global-spin" />
     },
   })
 }
