@@ -36,7 +36,8 @@ const dynamicWrapper = (app, models, component) => {
         return props =>
           createElement(Component, {
             ...props,
-            routerData: getRouteDataCache(app),
+            // 为所有的 component 传入 routeData
+            routeData: getRouteDataCache(app),
           })
       })
     },

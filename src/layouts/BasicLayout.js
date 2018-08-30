@@ -1,9 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Layout } from 'antd'
 import { connect } from 'dva'
 import InnerHeader from '../components/Header'
 import InnerFooter from '../components/Footer'
 import SiderMenu from '../components/SiderMenu'
+import { getMenu } from '../common/menu'
 import logo from '@/assets/logo.png'
 
 const { Content, Header, Footer } = Layout
@@ -12,6 +14,17 @@ const { Content, Header, Footer } = Layout
   collapsed: layout.collapsed,
 }))
 export default class BasicLayout extends React.PureComponent {
+  static childContextTypes = {
+    location: PropTypes.object,
+  }
+
+  getChildContext() {
+    const { location, routeData } = this.props
+    return {
+      location,
+    }
+  }
+
   handleMenuCollapse = collapsed => {
     const { dispatch } = this.props
     dispatch({
@@ -20,8 +33,14 @@ export default class BasicLayout extends React.PureComponent {
     })
   }
 
-  renderSiderMenu = ({ collapsed }) => (
-    <SiderMenu logo={logo} collapsed={collapsed} onCollapse={this.handleMenuCollapse} />
+  renderSiderMenu = ({ collapsed, location }) => (
+    <SiderMenu
+      logo={logo}
+      collapsed={collapsed}
+      onCollapse={this.handleMenuCollapse}
+      location={location}
+      menuData={getMenu()}
+    />
   )
 
   renderLayout = ({ collapsed }) => (
