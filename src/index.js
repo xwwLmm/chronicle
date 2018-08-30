@@ -2,6 +2,7 @@ import dva from 'dva'
 import createHistory from 'history/createBrowserHistory'
 import createLoading from 'dva-loading'
 import 'normalize.css'
+import './index.less'
 
 const app = dva({
   history: createHistory(),
