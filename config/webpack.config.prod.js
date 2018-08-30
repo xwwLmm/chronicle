@@ -110,6 +110,8 @@ module.exports = {
                         loader: require.resolve("babel-loader"),
                         options: {
                             plugins: [
+                                "transform-decorators-legacy",
+                                "transform-runtime",
                                 [
                                     "import",
                                     [{ libraryName: "antd", style: "css" }]
