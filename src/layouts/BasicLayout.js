@@ -40,7 +40,7 @@ export default class BasicLayout extends React.PureComponent {
   }
 
   getChildContext() {
-    const { location, routeData } = this.props
+    const { location } = this.props
     return {
       location,
     }
