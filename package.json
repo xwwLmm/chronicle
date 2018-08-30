@@ -7,7 +7,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "tag": "node scripts/tag.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "prettier": "prettier --write ./src/**/**/**/*"
   },
   "dependencies": {
     "antd": "^3.8.2",
