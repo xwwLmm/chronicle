@@ -6,9 +6,30 @@ import InnerHeader from '../components/Header'
 import InnerFooter from '../components/Footer'
 import SiderMenu from '../components/SiderMenu'
 import { getMenu } from '../common/menu'
+import { getRoutes } from '@/utils'
 import logo from '@/assets/logo.png'
+import { Switch, Redirect, Route } from 'dva/router'
 
 const { Content, Header, Footer } = Layout
+
+/**
+ * 根据菜单取得每个 menu item 的重定向地址
+ */
+const redirectData = []
+const getRedirect = item => {
+  if (item && item.children) {
+    if (item.children[0] && item.children[0].path) {
+      redirectData.push({
+        from: `${item.path}`,
+        to: `${item.children[0].path}`,
+      })
+      item.children.forEach(children => {
+        getRedirect(children)
+      })
+    }
+  }
+}
+getMenu().forEach(getRedirect)
 
 @connect(({ layout = {} }) => ({
   collapsed: layout.collapsed,
@@ -43,7 +64,7 @@ export default class BasicLayout extends React.PureComponent {
     />
   )
 
-  renderLayout = ({ collapsed }) => (
+  renderLayout = ({ collapsed, routeData, match }) => (
     <Layout>
       {this.renderSiderMenu(this.props)}
       <Layout>
@@ -51,9 +72,20 @@ export default class BasicLayout extends React.PureComponent {
           <InnerHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} />
         </Header>
         <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-          <div style={{ background: '#fff', padding: '200px 0' }}>
-            由于权限原因 此处动态注入 router
-          </div>
+          <Switch>
+            {redirectData.map(item => (
+              <Redirect key={item.from} exact from={item.from} to={item.to} />
+            ))}
+            {getRoutes(match.path, routeData).map(item => (
+              <Route
+                key={item.key}
+                path={item.path}
+                component={item.component}
+                exact={item.exact}
+                redirectPath="/exception/403"
+              />
+            ))}
+          </Switch>
         </Content>
         <Footer>
           <InnerFooter />

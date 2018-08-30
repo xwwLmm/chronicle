@@ -96,7 +96,7 @@ export default class SiderMenu extends PureComponent {
         </a>
       )
     }
-    const { location, onCollapse } = this.props
+    const { location } = this.props
     return (
       <Link
         to={itemPath}
