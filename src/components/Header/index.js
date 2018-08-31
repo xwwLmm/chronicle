@@ -1,12 +1,47 @@
 import React, { Component } from 'react'
 import Debounce from 'lodash-decorators/debounce'
-import { Avatar, Icon, Dropdown, Spin, Menu } from 'antd'
+import { Avatar, Icon, Dropdown, Spin, Menu, Tag } from 'antd'
+import moment from 'moment'
+import groupBy from 'lodash/groupBy'
 import Notice from '../Notice'
 import styles from './index.less'
 
 export default class Header extends Component {
   componentWillUnmount() {
     this.triggerResizeEvent.cancel()
+  }
+
+  getNoticeList = notices => {
+    if (!notices || notices.length === 0) {
+      return {}
+    }
+    const newNotices = notices.map(notice => {
+      const newNotice = { ...notice }
+      if (newNotice.datetime) {
+        newNotice.datetime = moment(notice.datetime).fromNow()
+      }
+
+      if (newNotice.id) {
+        newNotice.key = newNotice.id
+      }
+
+      if (newNotice.status && newNotice.extra) {
+        const color = {
+          todo: '#909399',
+          processing: '#108ee9', // 处理
+          urgent: '#f50', // 加急
+          doing: '#E6A23C', // 正在做
+        }[newNotice.status]
+
+        newNotice.extra = (
+          <Tag color={color} style={{ marginRight: 0 }}>
+            {newNotice.extra}
+          </Tag>
+        )
+      }
+      return newNotice
+    })
+    return groupBy(newNotices, 'type')
   }
 
   toggle = () => {
@@ -49,19 +84,45 @@ export default class Header extends Component {
     </Menu>
   )
 
-  renderRight = props => {
-    const { user, collapsed, logo, onNoticeVisibleChange, onMenuClick, onNoticeClear } = this.props
+  renderRight = () => {
+    const {
+      user,
+      collapsed,
+      logo,
+      onNoticeVisibleChange,
+      onMenuClick,
+      onNoticeClear,
+      notices,
+    } = this.props
+    const noticeList = this.getNoticeList(notices.list)
     return (
       <div className={styles.right}>
         <Notice
           className={styles.action}
-          count={1}
+          count={user.notifyCount}
+          onClear={onNoticeClear}
           onPopupVisibleChange={onNoticeVisibleChange}
           popupAlign={{ offset: [20, -16] }}
         >
           <Notice.Tab
+            list={noticeList.message}
+            type="message"
             title="消息"
-            emptyText="您已读完所有消息"
+            emptyText="你已读完所有消息"
+            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+          />
+          <Notice.Tab
+            list={noticeList.notice}
+            type="notice"
+            title="通知"
+            emptyText="你已查看所有通知"
+            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+          />
+          <Notice.Tab
+            list={noticeList.todo}
+            type="todo"
+            title="待办"
+            emptyText="无待办"
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
           />
         </Notice>
@@ -83,7 +144,7 @@ export default class Header extends Component {
     return (
       <div className={styles.header}>
         {this.renderTrigger(this.props)}
-        {this.renderRight(this.props)}
+        {this.renderRight()}
       </div>
     )
   }

@@ -50,7 +50,7 @@ const dynamicWrapper = (app, models, component) => {
 export const getRoute = app => {
   const routeConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user', 'notice'], () => import('../layouts/BasicLayout')),
     },
     '/audit/report': {
       component: dynamicWrapper(app, [], () => import('../routes/Reporter')),

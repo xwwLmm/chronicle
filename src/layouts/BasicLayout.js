@@ -31,9 +31,10 @@ const getRedirect = item => {
 }
 getMenu().forEach(getRedirect)
 
-@connect(({ layout = {}, user }) => ({
+@connect(({ layout = {}, user, notice }) => ({
   collapsed: layout.collapsed,
   user: user.current,
+  notices: notice,
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -55,6 +56,15 @@ export default class BasicLayout extends React.PureComponent {
     })
   }
 
+  handleNoticeClear = type => {
+    const {dispatch} = this.props;
+
+    dispatch({
+      type: 'notice/clearNotices',
+      payload: type
+    })
+  }
+
   renderSiderMenu = ({ collapsed, location }) => (
     <SiderMenu
       logo={logo}
@@ -65,8 +75,14 @@ export default class BasicLayout extends React.PureComponent {
     />
   )
 
-  renderInnerHeader = ({ collapsed, user }) => (
-    <InnerHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} user={user} />
+  renderInnerHeader = ({ collapsed, user, notices }) => (
+    <InnerHeader
+      collapsed={collapsed}
+      onCollapse={this.handleMenuCollapse}
+      user={user}
+      notices={notices}
+      onNoticeClear={this.handleNoticeClear}
+    />
   )
 
   renderLayout = ({ collapsed, routeData, match }) => (
