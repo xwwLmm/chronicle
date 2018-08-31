@@ -81,6 +81,7 @@ export default class BasicLayout extends React.PureComponent {
       onCollapse={this.handleMenuCollapse}
       user={user}
       notices={notices}
+      onMenuClick={() => {}}
       onNoticeClear={this.handleNoticeClear}
     />
   )

@@ -66,8 +66,8 @@ export default class Header extends Component {
     />
   )
 
-  renderUserMenu = () => (
-    <Menu className={styles.menu} selectedKeys={[]}>
+  renderUserMenu = ({onMenuClick}) => (
+    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       <Menu.Item disabled>
         <Icon type="user" />
         个人中心
@@ -87,14 +87,13 @@ export default class Header extends Component {
   renderRight = () => {
     const {
       user,
-      collapsed,
-      logo,
       onNoticeVisibleChange,
       onMenuClick,
       onNoticeClear,
       notices,
     } = this.props
     const noticeList = this.getNoticeList(notices.list)
+    const menu = this.renderUserMenu({onMenuClick});
     return (
       <div className={styles.right}>
         <Notice
@@ -127,7 +126,7 @@ export default class Header extends Component {
           />
         </Notice>
         {user.name ? (
-          <Dropdown overlay={this.renderUserMenu()}>
+          <Dropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar size="small" className={styles.avatar} src={user.avatar} />
               <span className={styles.name}>{user.name}</span>
