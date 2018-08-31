@@ -31,8 +31,9 @@ const getRedirect = item => {
 }
 getMenu().forEach(getRedirect)
 
-@connect(({ layout = {} }) => ({
+@connect(({ layout = {}, user }) => ({
   collapsed: layout.collapsed,
+  user: user.current,
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -40,7 +41,7 @@ export default class BasicLayout extends React.PureComponent {
   }
 
   getChildContext() {
-    const { location, routeData } = this.props
+    const { location } = this.props
     return {
       location,
     }
@@ -64,13 +65,15 @@ export default class BasicLayout extends React.PureComponent {
     />
   )
 
+  renderInnerHeader = ({ collapsed, user }) => (
+    <InnerHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} user={user} />
+  )
+
   renderLayout = ({ collapsed, routeData, match }) => (
     <Layout>
       {this.renderSiderMenu(this.props)}
       <Layout>
-        <Header style={{ padding: 0 }}>
-          <InnerHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} />
-        </Header>
+        <Header style={{ padding: 0 }}>{this.renderInnerHeader(this.props)}</Header>
         <Content style={{ margin: '24px 24px 0', height: '100%' }}>
           <Switch>
             {redirectData.map(item => (

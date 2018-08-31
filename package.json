@@ -1,6 +1,7 @@
 {
   "name": "chronicle",
   "version": "0.1.0",
+  "homepage": "/chronicle",
   "description": "template for cli",
   "scripts": {
     "dev": "node scripts/start.js",
@@ -8,7 +9,16 @@
     "build": "node scripts/build.js",
     "tag": "node scripts/tag.js",
     "test": "node scripts/test.js --env=jsdom",
-    "prettier": "prettier --write ./src/**/**/**/*"
+    "prettier": "prettier --write ./src/**/**/**/*",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
+  },
+  "lint-staged": {
+    "./src/**/**/**/*": ["prettier --write", "git add"]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "dependencies": {
     "antd": "^3.8.2",
@@ -76,6 +86,9 @@
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
-  "devDependencies": {},
-  "homepage": "/chronicle"
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
+    "pre-commit": "^1.2.2"
+  }
 }
