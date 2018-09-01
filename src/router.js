@@ -1,8 +1,10 @@
 import React from 'react'
-import { routerRedux, Route, Switch } from 'dva/router'
+import { routerRedux, Switch } from 'dva/router'
 import { getRoute } from './common/route'
+import Authorized from './components/Authorized/utils/Authorized'
 
 const { ConnectedRouter } = routerRedux
+const { AuthorizedRoute } = Authorized
 
 function RouterConfig({ history, app }) {
   const routeData = getRoute(app)
@@ -10,7 +12,11 @@ function RouterConfig({ history, app }) {
   return (
     <ConnectedRouter history={history}>
       <Switch>
-        <Route path="/" component={BasicLayout} />
+        <AuthorizedRoute
+          path="/"
+          render={props => <BasicLayout {...props} />}
+          authority={['admin', 'user']}
+        />
       </Switch>
     </ConnectedRouter>
   )

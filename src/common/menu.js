@@ -8,7 +8,7 @@ const menuData = [
     children: [
       {
         name: '举报',
-        path: 'report',
+        path: 'report'
       },
       {
         name: '历史事件',
@@ -24,6 +24,7 @@ const menuData = [
       {
         name: '新增管理员',
         path: 'admin-new',
+        authority: 'admin'
       },
     ],
   },
