@@ -5,7 +5,9 @@ import 'normalize.css'
 import './index.less'
 
 const app = dva({
-  history: createHistory(),
+  history: createHistory({
+    basename: '/chronicle'
+  }),
 })
 
 // 2. Plugins

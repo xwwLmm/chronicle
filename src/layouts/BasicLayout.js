@@ -1,16 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Layout } from 'antd'
+import { Layout, message } from 'antd'
 import { connect } from 'dva'
 import InnerHeader from '../components/Header'
 import InnerFooter from '../components/Footer'
 import SiderMenu from '../components/SiderMenu'
 import { getMenu } from '../common/menu'
 import { getRoutes } from '@/utils'
+import Authorized from '../components/Authorized/utils/Authorized'
+import NotFound from '../routes/Exception/404'
 import logo from '@/assets/logo.png'
 import { Switch, Redirect, Route } from 'dva/router'
 
 const { Content, Header, Footer } = Layout
+const { AuthorizedRoute, check } = Authorized
 
 /**
  * 根据菜单取得每个 menu item 的重定向地址
@@ -31,9 +34,10 @@ const getRedirect = item => {
 }
 getMenu().forEach(getRedirect)
 
-@connect(({ layout = {}, user }) => ({
+@connect(({ layout = {}, user, notice }) => ({
   collapsed: layout.collapsed,
   user: user.current,
+  notices: notice,
 }))
 export default class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -55,6 +59,37 @@ export default class BasicLayout extends React.PureComponent {
     })
   }
 
+  handleNoticeClear = type => {
+    message.success(`清空了${type}`)
+
+    const { dispatch } = this.props
+
+    dispatch({
+      type: 'notice/clearNotices',
+      payload: type,
+    })
+  }
+  
+  getBaseRedirect = () => {
+    // 这里是重定向的,重定向到 url 的 redirect 参数所示地址
+    const urlParams = new URL(window.location.href)
+
+    const redirect = urlParams.searchParams.get('redirect')
+    // Remove the parameters in the url
+    if (redirect) {
+      urlParams.searchParams.delete('redirect')
+      window.history.replaceState(null, 'redirect', urlParams.href)
+    } else {
+      const { routeData } = this.props
+      // 获取 routeData 中第一个有权限的路由
+      const authorizedPath = Object.keys(routeData).find(
+        item => check(routeData[item].authority, item) && item !== '/'
+      )
+      return authorizedPath
+    }
+    return redirect
+  }
+
   renderSiderMenu = ({ collapsed, location }) => (
     <SiderMenu
       logo={logo}
@@ -65,11 +100,18 @@ export default class BasicLayout extends React.PureComponent {
     />
   )
 
-  renderInnerHeader = ({ collapsed, user }) => (
-    <InnerHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} user={user} />
+  renderInnerHeader = ({ collapsed, user, notices }) => (
+    <InnerHeader
+      collapsed={collapsed}
+      onCollapse={this.handleMenuCollapse}
+      user={user}
+      notices={notices}
+      onMenuClick={() => {}}
+      onNoticeClear={this.handleNoticeClear}
+    />
   )
 
-  renderLayout = ({ collapsed, routeData, match }) => (
+  renderLayout = ({ collapsed, routeData, match, baseRedirect }) => (
     <Layout>
       {this.renderSiderMenu(this.props)}
       <Layout>
@@ -80,14 +122,17 @@ export default class BasicLayout extends React.PureComponent {
               <Redirect key={item.from} exact from={item.from} to={item.to} />
             ))}
             {getRoutes(match.path, routeData).map(item => (
-              <Route
+              <AuthorizedRoute
                 key={item.key}
                 path={item.path}
                 component={item.component}
                 exact={item.exact}
+                authority={item.authority}
                 redirectPath="/exception/403"
               />
             ))}
+            <Redirect exact from="/" to={baseRedirect} />
+            <Route render={NotFound} />
           </Switch>
         </Content>
         <Footer>
@@ -98,6 +143,15 @@ export default class BasicLayout extends React.PureComponent {
   )
 
   render() {
-    return <div>{this.renderLayout(this.props)}</div>
+    const baseRedirect = this.getBaseRedirect()
+
+    return (
+      <div>
+        {this.renderLayout({
+          ...this.props,
+          baseRedirect,
+        })}
+      </div>
+    )
   }
 }

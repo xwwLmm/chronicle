@@ -54,7 +54,7 @@ export default class Notice extends Component {
           {...child.props}
           data={child.props.list}
           onClick={item => this.onItemClick(item, child.props)}
-          onClear={() => onClear(child.props.title)}
+          onClear={() => onClear(child.props.type)}
           title={child.props.title}
           locale={locale}
         />
