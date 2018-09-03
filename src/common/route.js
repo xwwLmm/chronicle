@@ -2,6 +2,7 @@ import React, { createElement } from 'react'
 import { Spin } from 'antd'
 import Loadable from 'react-loadable'
 import pathToRegexp from 'path-to-regexp'
+import Loading from '../components/Loading'
 import { getMenu } from './menu'
 
 let routerDataCache
@@ -45,7 +46,7 @@ const dynamicWrapper = (app, models, component) => {
       })
     },
     loading: () => {
-      return <Spin size="large" className="global-spin" />
+      return <Loading/>
     },
   })
 }

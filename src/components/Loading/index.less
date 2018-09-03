@@ -1,0 +1,60 @@
+.child-loop(@n, @i:1) when (@i <= @n) {
+  .circle-@{i} {
+    transform: rotate(unit(30 * @i - 30, deg))
+  }
+
+  .circle-@{i}:before {
+    animation-delay: unit((-12 + @i - 1) / 10, s);
+  }
+
+  .child-loop(@n, (@i + 1))
+}
+
+.circle {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 50px;
+  height: 50px;
+  z-index: 200;
+
+  .child-loop(12, 2)
+}
+.child {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 500;
+}
+
+.child:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 13%;
+  height: 13%;
+  background-color: #1890ff;
+  border-radius: 100%;
+  animation: loading-circleBounceDelay 1.2s infinite ease-in-out both;
+}
+
+@-webkit-keyframes loading-circleBounceDelay {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+@keyframes loading-circleBounceDelay {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
